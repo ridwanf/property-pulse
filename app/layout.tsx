@@ -1,4 +1,6 @@
 import "@/assets/styles/globals.css"
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export const metadata = {
   title: "Property Pulse",
@@ -13,7 +15,11 @@ export default function MainLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="">{children}</body>
+      <body className="">
+        <Navbar />
+        <main className="min-h-[calc(100vh-240px)]">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
