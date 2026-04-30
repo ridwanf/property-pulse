@@ -1,5 +1,5 @@
 import React from 'react'
-import propertiest from '@/properties.json'
+import propertiest from '@/properties'
 import PropertyCard from './PropertyCard';
 import Link from 'next/link';
 const HomeProperties = () => {

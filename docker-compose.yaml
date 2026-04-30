@@ -1,0 +1,38 @@
+services:
+  backend:
+    container_name: property-pulse-backend
+    image: mongo:latest
+    restart: always
+    environment:
+      DB_NAME: property-pulse
+      MONGO_INITDB_DATABASE: property-pulse
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./.docker/seed/properties.js:/docker-entrypoint-initdb.d/properties.js
+      - mongodb_data_container:/data/db
+
+  # frontend service:
+  application:
+    container_name: property-pulse-frontend
+    image: node:20-slim
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/home/node
+      - node_modules_cache:/home/node/node_modules
+      - npm_cache:/root/.npm
+    working_dir: /home/node
+    depends_on:
+      - backend
+    environment:
+      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
+    tty: true
+    stdin_open: true
+    command: sh -c "npm install && npm run dev -- -H 0.0.0.0"
+volumes:
+  mongodb_data_container:
+  node_modules_cache:
+  npm_cache:

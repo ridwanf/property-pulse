@@ -1,7 +1,7 @@
 'use client'
 import PropertyCard from '@/components/PropertyCard'
 import PropertySearchForm from '@/components/PropertySearchForm'
-import properties from '@/properties.json'
+import properties from '@/properties'
 
 
 interface PropertiesProps {
