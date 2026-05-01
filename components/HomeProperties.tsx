@@ -1,13 +1,9 @@
-import React from 'react'
-import propertiest from '@/properties'
 import PropertyCard from './PropertyCard';
 import Link from 'next/link';
-const HomeProperties = () => {
+import { fetchProperties } from '@/utils/requests';
 
-  const recentProperties = propertiest
-    // eslint-disable-next-line react-hooks/purity
-    .sort(() => Math.random() - Math.random())
-    .slice(0, 3);
+const HomeProperties = async () => {
+  const properties = await fetchProperties({ pagesSize: 3 })
 
   return (
     <>
@@ -17,11 +13,28 @@ const HomeProperties = () => {
             Recent Properties
           </h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            {recentProperties.length === 0 ? (
+            {properties.length === 0 ? (
               <p>No Properties Found</p>
             ) : (
-              recentProperties.map((property) => (
-                <PropertyCard key={property._id} {...property} />
+              properties.map((property, index) => (
+                <PropertyCard
+                  _id={property?._id?.toString()}
+                  owner={property?.owner?.toString()}
+                  key={index}
+                  type={property?.type || ''}
+                  beds={property?.beds || 0}
+                  baths={property?.baths || 0}
+                  square_feet={property?.square_feet || 0}
+                  location={{
+                    city: property?.location?.city || "",
+                    state: property?.location?.state || ""
+                  }}
+                  images={property?.images || []}
+                  rates={{
+                    weekly: property?.rates?.weekly,
+                    monthly: property?.rates?.monthly,
+                    nightly: property?.rates?.nightly
+                  }} />
               ))
             )}
           </div>

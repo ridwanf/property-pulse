@@ -1,46 +1,33 @@
 "use client"
-// import BookmarkButton from '@/components/BookmarkButton'
-// import PropertyContactForm from '@/components/PropertyContactForm'
 import PropertyDetails from '@/components/PropertyDetails'
 import PropertyHeaderImage from '@/components/PropertyHeaderImage'
-import PropertyImages from '@/components/PropertyImages'
-import ShareButtons from '@/components/ShareButtons'
 import { PropertyClass } from '@/models/Property'
 import { fetchPropertyById } from '@/utils/requests'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 
 const PropertyPage = () => {
+  const router = useRouter()
   const { id } = useParams() as { id: string }
   const [property, setProperty] = useState<PropertyClass | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     // Simulate fetching property data
     const fetchProperty = async () => {
-      console.log('Fetching property with ID:', id)
       if (id) {
-        try {
-          const res = await fetchPropertyById(id)
+        const res = await fetchPropertyById(id)
+        if (res) {
           setProperty(res)
-        } catch (error) {
-          console.error('Error fetching property:', error)
         }
-        finally {
-          setIsLoading(false)
-        }
-      } else {
-        return
       }
     }
-    if (!property) {
-      fetchProperty()
-    }
-  }, [id, property])
+
+    fetchProperty()
+  }, [id])
   return (
     <>
-      {!isLoading && property && property.images && property.images[0] && (
+      {property && property.images && property.images[0] && (
         <PropertyHeaderImage image={property.images[0]} />
       )}
       <section>
@@ -80,18 +67,14 @@ const PropertyPage = () => {
 
             {/* <!-- Sidebar --> */}
             <aside className='space-y-4'>
-              {/* <BookmarkButton property={property} /> */}
-              <ShareButtons property={{
-                name: property?.name || '',
-                type: property?.type || '',
-                _id: property?._id?.toString() || ''
-              }} />
-              {/* <PropertyContactForm property={property} /> */}
+              <BookmarkButton property={property} />
+              <ShareButtons property={property} />
+              <PropertyContactForm property={property} />
             </aside>
           </div>
         </div>
       </section>
-      <PropertyImages images={property?.images || []} />
+      <PropertyImages images={property.images} />
     </>
   )
 }

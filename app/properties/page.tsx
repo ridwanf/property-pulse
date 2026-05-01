@@ -1,8 +1,8 @@
-'use client'
+
 import PropertyCard from '@/components/PropertyCard'
 import PropertySearchForm from '@/components/PropertySearchForm'
-import properties from '@/properties'
-
+import { fetchProperties } from '@/utils/requests'
+import { Key } from 'react'
 
 interface PropertiesProps {
   searchParams: {
@@ -10,7 +10,8 @@ interface PropertiesProps {
     page?: number | 1,
   }
 }
-const PropertiesPage = ({ searchParams }: PropertiesProps) => {
+const PropertiesPage = async ({ searchParams }: PropertiesProps) => {
+  const properties = await fetchProperties({ pagesSize: 10 })
   return (
     <>
       <section className='bg-blue-700 py-4'>
@@ -25,10 +26,25 @@ const PropertiesPage = ({ searchParams }: PropertiesProps) => {
             <p>No properties found</p>
           ) : (
             <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-              {properties.map((property, index) => (
+              {properties.map((property, index: Key | null | undefined) => (
                 <PropertyCard
-                  {...property}
-                  key={index} />
+                  _id={property?._id?.toString()}
+                  owner={property?.owner?.toString()}
+                  key={index}
+                  type={property?.type || ''}
+                  beds={property?.beds || 0}
+                  baths={property?.baths || 0}
+                  square_feet={property?.square_feet || 0}
+                  location={{
+                    city: property?.location?.city || "",
+                    state: property?.location?.state || ""
+                  }}
+                  images={property?.images || []}
+                  rates={{
+                    weekly: property?.rates?.weekly,
+                    monthly: property?.rates?.monthly,
+                    nightly: property?.rates?.nightly
+                  }} />
               ))}
             </div>
           )}
