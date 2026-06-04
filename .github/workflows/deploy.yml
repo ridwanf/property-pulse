@@ -29,6 +29,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug envs
+        run: |
+          echo "NEXTAUTH_URL set? ${{ secrets.NEXTAUTH_URL != '' }}"
+          echo "NEXT_PUBLIC_DOMAIN set? ${{ secrets.NEXT_PUBLIC_DOMAIN != '' }}"
+          echo "NEXT_PUBLIC_API_DOMAIN set? ${{ secrets.NEXT_PUBLIC_API_DOMAIN != '' }}"
+          echo "MONGO_URI set? ${{ secrets.MONGO_URI != '' }}"
+
       - name: Build Next.js
         run: npm run build
         env:

@@ -4,7 +4,6 @@ import { fetchProperties } from '@/utils/requests';
 
 const HomeProperties = async () => {
   const properties = await fetchProperties({ pagesSize: 3 })
-  console.log('Fetched properties for HomeProperties:', properties)
   return (
     <>
       <section className='px-4 py-6'>
