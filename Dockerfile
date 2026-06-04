@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:20-slim AS base
+FROM node:22-alpine AS base
 
 # Dependencies
 FROM base as deps
