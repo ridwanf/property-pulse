@@ -68,15 +68,16 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /opt/property-pulse
+            cd /apps/property-pulse
             
             # Login to GitHub Container Registry
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
-            # Pull new image
+            # Set environment variables
             export GITHUB_REPOSITORY=${{ github.repository }}
             export IMAGE_TAG=${{ needs.build-and-push.outputs.image_tag }}
             
+            # Pull new image
             docker-compose -f docker-compose.prod.yml pull app
             
             # Restart with zero downtime
