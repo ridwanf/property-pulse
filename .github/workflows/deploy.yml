@@ -30,13 +30,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Debug envs
-        run: |
-          echo "NEXTAUTH_URL set? ${{ secrets.NEXTAUTH_URL != '' }}"
-          echo "NEXT_PUBLIC_DOMAIN set? ${{ secrets.NEXT_PUBLIC_DOMAIN != '' }}"
-          echo "NEXT_PUBLIC_API_DOMAIN set? ${{ secrets.NEXT_PUBLIC_API_DOMAIN != '' }}"
-          echo "MONGO_URI set? ${{ secrets.MONGO_URI != '' }}"
-
       - name: Build Next.js
         run: npm run build
         env:
@@ -79,18 +72,18 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.ref_name }}
           build-args: |
-            MONGO_URI: ${{ secrets.MONGO_URI }}
-            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-            NEXT_PUBLIC_DOMAIN: ${{ secrets.NEXT_PUBLIC_DOMAIN }}
-            NEXT_PUBLIC_API_DOMAIN: ${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
-            NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY }}
-            GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-            GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-            NEXTAUTH_URL_INTERNAL: ${{ secrets.NEXTAUTH_URL_INTERNAL }}
-            CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-            CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-            CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+            MONGO_URI=${{ secrets.MONGO_URI }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            NEXT_PUBLIC_DOMAIN=${{ secrets.NEXT_PUBLIC_DOMAIN }}
+            NEXT_PUBLIC_API_DOMAIN=${{ secrets.NEXT_PUBLIC_API_DOMAIN }}
+            NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            NEXTAUTH_URL_INTERNAL=${{ secrets.NEXTAUTH_URL_INTERNAL }}
+            CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+            CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
 
   deploy:
     name: Deploy to VPS
@@ -100,20 +93,20 @@ jobs:
 
     steps:
       - name: Deploy on VPS
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@1.03
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            docker login ghcr.io -u ${{ github.repository_owner }} -p ${{ secrets.GH_TOKEN }}
-            docker pull ${{ env.IMAGE_NAME }}:${{ github.ref_name }}
-            docker stop property-pulse || true
-            docker rm property-pulse || true
-            docker run -d \
-              --name property-pulse \
-              --restart always \
-              -p 3000:3000 \
-              --env-file /var/www/property-pulse/.env.production \
-              ${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+            cd /var/www/property-pulse
+
+            echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io \
+              -u "${{ github.repository_owner }}" \
+              --password-stdin
+
+            docker compose pull
+            docker compose up -d
+
+            docker image prune -af
