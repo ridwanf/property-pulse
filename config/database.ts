@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
-const MONGO_URI = process.env.MONGO_URI || "";
 
-if (!MONGO_URI.length) {
-  throw new Error("Please define the MONGO_URI environment variable (.env.local)");
-}
 
 let connected = false
 
 const connectDB = async () => {
+  const MONGO_URI = process.env.MONGO_URI || "";
+
+  if (!MONGO_URI.length) {
+    throw new Error("Please define the MONGO_URI environment variable (.env.local)");
+  }
   mongoose.set('strictQuery', true)
 
   // if the database is already connected, return the existing connection
