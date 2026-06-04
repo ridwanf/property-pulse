@@ -1,6 +1,6 @@
 import connectDB from "@/config/database";
 import User from "@/models/User";
-import { Account, DefaultSession, Profile, Session } from "next-auth";
+import NextAuth, { Account, DefaultSession, NextAuthOptions, Profile, Session } from "next-auth";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 console.log(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET)
 
@@ -12,7 +12,7 @@ declare module "next-auth" {
   }
 }
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -49,9 +49,13 @@ export const authOptions = {
       }
     },
     async session({ session }: { session: Session }) {
+
       try {
-        const user = await User.findOne({ email: session.user?.email });
-        if (session.user) {
+        if (!session.user?.email) return session;
+        await connectDB();
+        const user = await User.findOne({ email: session.user.email });
+
+        if (user) {
           session.user.id = user._id.toString();
         }
         return session;
@@ -63,3 +67,5 @@ export const authOptions = {
     }
   }
 };
+
+export default NextAuth(authOptions);

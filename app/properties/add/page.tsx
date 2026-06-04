@@ -12,3 +12,6 @@ const PropertyAddPage = () => {
   );
 };
 export default PropertyAddPage;
+// export default function PropertyAddPage() {
+//   return <h1>Add Property Page Works!</h1>
+// }

@@ -44,7 +44,9 @@ const PropertyCard = (property: PropertyCardProps) => {
   return (
     <div className='rounded-xl shadow-md relative'>
       <Image
-        src={`/images/properties/${property.images[0]}` || '/placeholder.jpg'}
+        src={
+          property.images[0].indexOf('http') !== -1 ? property.images[0] : (`/images/properties/${property.images[0]}` || property.images[0])
+        }
         alt=''
         height={0}
         width={0}

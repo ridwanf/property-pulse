@@ -34,7 +34,7 @@ services:
       - WATCHPACK_POLLING=true
     tty: true
     stdin_open: true
-    command: sh -c "[ -d node_modules/next ] || npm install --include=optional; exec npm run dev"
+    command: sh -c "npm ci --include=optional && exec npm run dev -- -H 0.0.0.0"
 volumes:
   mongodb_data_container:
   node_modules_cache:

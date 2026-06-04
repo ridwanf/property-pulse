@@ -1,6 +1,4 @@
 "use client"
-// import BookmarkButton from '@/components/BookmarkButton'
-// import PropertyContactForm from '@/components/PropertyContactForm'
 import PropertyDetails from '@/components/PropertyDetails'
 import PropertyHeaderImage from '@/components/PropertyHeaderImage'
 import PropertyImages from '@/components/PropertyImages'
@@ -12,14 +10,13 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
 
-const PropertyPage = () => {
+export default function PropertyPage() {
   const { id } = useParams() as { id: string }
   const [property, setProperty] = useState<PropertyClass | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     // Simulate fetching property data
     const fetchProperty = async () => {
-      console.log('Fetching property with ID:', id)
       if (id) {
         try {
           const res = await fetchPropertyById(id)
@@ -75,7 +72,6 @@ const PropertyPage = () => {
               },
               description: property?.description || '',
               amenities: property?.amenities || []
-
             }} />
 
             {/* <!-- Sidebar --> */}
@@ -95,6 +91,3 @@ const PropertyPage = () => {
     </>
   )
 }
-
-
-export default PropertyPage

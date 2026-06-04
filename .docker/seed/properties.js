@@ -3,7 +3,7 @@ print("Seeding data")
 db.properties.insert(
   [
     {
-      "_id": "1",
+      // // "_id": "1",
       "owner": "1",
       "name": "Boston Commons Retreat",
       "type": "Apartment",
@@ -52,7 +52,7 @@ db.properties.insert(
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
     {
-      "_id": "2",
+      // "_id": "2",
       "owner": "1",
       "name": "Cozy Downtown Loft",
       "type": "Apartment",
@@ -100,7 +100,7 @@ db.properties.insert(
       "updatedAt": "2024-01-02T00:00:00.000Z"
     },
     {
-      "_id": "3",
+      // "_id": "3",
       "owner": "2",
       "name": "Luxury Condo with a View",
       "type": "Condo",
@@ -150,7 +150,7 @@ db.properties.insert(
       "updatedAt": "2024-01-03T00:00:00.000Z"
     },
     {
-      "_id": "4",
+      // "_id": "4",
       "owner": "2",
       "name": "Charming Cottage Getaway",
       "type": "Cottage Or Cabin",
@@ -188,7 +188,7 @@ db.properties.insert(
       "updatedAt": "2024-01-04T00:00:00.000Z"
     },
     {
-      "_id": "5",
+      // "_id": "5",
       "owner": "3",
       "name": "Modern Downtown Studio",
       "type": "Studio",
@@ -228,7 +228,7 @@ db.properties.insert(
       "updatedAt": "2024-01-05T00:00:00.000Z"
     },
     {
-      "_id": "6",
+      // "_id": "6",
       "owner": "3",
       "name": "Seaside Retreat",
       "type": "House",
@@ -268,7 +268,7 @@ db.properties.insert(
       "updatedAt": "2024-01-06T00:00:00.000Z"
     },
     {
-      "_id": "7",
+      // "_id": "7",
       "owner": "4",
       "name": "Rustic Cabin in the Woods",
       "type": "Cottage Or Cabin",
@@ -307,7 +307,7 @@ db.properties.insert(
       "updatedAt": "2024-01-07T00:00:00.000Z"
     },
     {
-      "_id": "8",
+      // "_id": "8",
       "owner": "5",
       "name": "Ski-In/Ski-Out Chalet",
       "type": "Chalet",
@@ -346,7 +346,7 @@ db.properties.insert(
       "updatedAt": "2024-01-08T00:00:00.000Z"
     },
     {
-      "_id": "9",
+      // "_id": "9",
       "owner": "6",
       "name": "Mountain View Retreat",
       "type": "House",
@@ -386,7 +386,7 @@ db.properties.insert(
       "updatedAt": "2024-01-09T00:00:00.000Z"
     },
     {
-      "_id": "10",
+      // "_id": "10",
       "owner": "7",
       "name": "Historic Downtown Loft",
       "type": "Apartment",

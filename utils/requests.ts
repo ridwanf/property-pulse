@@ -15,6 +15,7 @@ async function fetchProperties(props: FetchPropertiesResponse): Promise<Property
     const response = await fetch(`${API_URL}/properties?pageSize=${props.pagesSize}`, {
       cache: 'no-store',
     })
+    console.log('Response from API:', response)
     if (!response.ok) {
       throw new Error('Failed to fetch properties')
     }

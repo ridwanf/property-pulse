@@ -1,9 +1,10 @@
 'use client';
-// import addProperty from '@/app/actions/addProperty';
+
+import addProperty from "@/app/actions/addProperty";
 
 const PropertyAddForm = () => {
   return (
-    <form>
+    <form action={addProperty}>
       <h2 className='text-3xl text-center font-semibold mb-6'>Add Property</h2>
 
       <div className='mb-4'>
@@ -49,7 +50,7 @@ const PropertyAddForm = () => {
           id='description'
           name='description'
           className='border rounded w-full py-2 px-3'
-          rows='4'
+          rows={4}
           placeholder='Add an optional description of your property'
         ></textarea>
       </div>
@@ -401,7 +402,7 @@ const PropertyAddForm = () => {
           Add Property
         </button>
       </div>
-    </form>
+    </form >
   );
 };
 

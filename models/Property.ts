@@ -32,6 +32,10 @@ export class PropertyClass {
 
 const PropertySchema: Schema<PropertyClass> = new Schema(
   {
+    _id: {
+      type: Schema.Types.ObjectId,
+      auto: true,
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'User',

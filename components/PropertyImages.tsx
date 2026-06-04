@@ -22,7 +22,9 @@ const PropertyImages = ({ images }: PropertyImagesProps) => {
                 <Image
                   ref={ref}
                   onClick={open}
-                  src={`/images/properties/${images[0]}` || '/placeholder.jpg'}
+                  src={
+                    images[0].indexOf('http') !== -1 ? images[0] : (`/images/properties/${images[0]}` || images[0])
+                  }
                   alt=''
                   className='object-cover h-[400px] mx-auto rounded-xl'
                   width={1800}
@@ -53,7 +55,10 @@ const PropertyImages = ({ images }: PropertyImagesProps) => {
                       <Image
                         ref={ref}
                         onClick={open}
-                        src={`/images/properties/${image}` || '/placeholder.jpg'}
+                        src={
+                          image.indexOf('http') !== -1 ? image : (`/images/properties/${image}` || image)
+
+                        }
                         alt=''
                         className='object-cover h-[400px] w-full rounded-xl cursor-pointer'
                         width={0}

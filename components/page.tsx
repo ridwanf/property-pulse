@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
+import PropertyImages from './PropertyImages'
 
 const PropertyPage = () => {
   const router = useRouter()
@@ -67,14 +68,14 @@ const PropertyPage = () => {
 
             {/* <!-- Sidebar --> */}
             <aside className='space-y-4'>
-              <BookmarkButton property={property} />
+              {/* <BookmarkButt property={property} />
               <ShareButtons property={property} />
-              <PropertyContactForm property={property} />
+              <PropertyContactForm property={property} /> */}
             </aside>
           </div>
         </div>
       </section>
-      <PropertyImages images={property.images} />
+      <PropertyImages images={property?.images || []} />
     </>
   )
 }

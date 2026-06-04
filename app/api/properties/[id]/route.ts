@@ -10,7 +10,7 @@ export const GET = async (request: Request, context: { params: Promise<{ id: str
 
     await connectDB();
     const property: PropertyClass | null = await Property.findById(id);
-
+    console.log("Fetched property:", property);
     if (!property) {
       return new Response("Property not found", {
         status: 404,

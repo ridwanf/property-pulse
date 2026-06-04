@@ -22,6 +22,22 @@ export default function MainLayout({
           <Navbar />
           <main className="min-h-[calc(100vh-240px)]">{children}</main>
           <Footer />
+
+          <Script src="/libs/dfp-sdk.min.js" strategy="lazyOnload" />
+
+          {/* <Script id="dfp-init" strategy="lazyOnload">
+            {`
+              (function checkDFP() {
+                if (typeof DFP !== 'undefined') {
+                  const sdk = new DFP.WebTelemetrySDK();
+                  console.log(sdk)
+                  sdk.collectAndSend().then(r => console.log('✅ Sent:', r));
+                } else {
+                  setTimeout(checkDFP, 100); // retry
+                }
+              })();
+            `}
+          </Script> */}
         </body>
       </html>
     </AuthProvider>
