@@ -2,11 +2,11 @@ services:
   backend:
     container_name: property-pulse-db
     image: mongo:latest
-    restart: always
+    restart: unless-stopped
     environment:
       MONGO_INITDB_DATABASE: property-pulse
-    ports:
-      - "27017:27017"
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
     volumes:
       - ./.docker/seed/properties.js:/docker-entrypoint-initdb.d/properties.js
       - mongodb_data:/data/db
@@ -20,8 +20,6 @@ services:
 
   application:
     container_name: property-pulse-frontend
-    # ✅ local: builds from Dockerfile with .env.local values
-    # ✅ production: pulls image from ghcr.io (build is ignored if image exists)
     build:
       context: .
       dockerfile: Dockerfile

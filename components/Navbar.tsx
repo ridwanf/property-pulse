@@ -244,7 +244,8 @@ const Navbar = () => {
 
                   <Link
                     href="/properties/add"
-                    className="text-white block rounded-md px-3 py-2 text-base font-medium"
+                    className={`${pathName == "/properties/add" ? "bg-black" : ""
+                      } text-white block rounded-md px-3 py-2 text-base font-medium`}
                   >
                     Add Property
                   </Link>
