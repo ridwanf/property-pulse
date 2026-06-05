@@ -106,7 +106,9 @@ jobs:
               -u "${{ github.repository_owner }}" \
               --password-stdin
 
-            docker compose pull
-            docker compose up -d
+            export DOCKER_IMAGE=ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            export ENV_FILE=.env.production
 
+            docker compose pull
+            docker compose up -d --remove-orphans
             docker image prune -af

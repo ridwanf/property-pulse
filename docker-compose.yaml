@@ -1,41 +1,59 @@
 services:
   backend:
-    container_name: property-pulse-backend
+    container_name: property-pulse-db
     image: mongo:latest
     restart: always
     environment:
-      DB_NAME: property-pulse
       MONGO_INITDB_DATABASE: property-pulse
     ports:
       - "27017:27017"
     volumes:
       - ./.docker/seed/properties.js:/docker-entrypoint-initdb.d/properties.js
-      - mongodb_data_container:/data/db
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
 
-  # frontend service:
   application:
     container_name: property-pulse-frontend
-    image: node:20-slim
+    # ✅ local: builds from Dockerfile with .env.local values
+    # ✅ production: pulls image from ghcr.io (build is ignored if image exists)
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MONGO_URI: ${MONGO_URI}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        NEXTAUTH_URL: ${NEXTAUTH_URL}
+        NEXTAUTH_URL_INTERNAL: ${NEXTAUTH_URL_INTERNAL}
+        NEXT_PUBLIC_DOMAIN: ${NEXT_PUBLIC_DOMAIN}
+        NEXT_PUBLIC_API_DOMAIN: ${NEXT_PUBLIC_API_DOMAIN}
+        NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY: ${NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY}
+        GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+        GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+        CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+        CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+        CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+    image: ${DOCKER_IMAGE:-property-pulse-local:latest}
+    restart: unless-stopped
     ports:
       - "3000:3000"
-    volumes:
-      - .:/home/node
-      - node_modules_cache:/home/node/node_modules
-      - npm_cache:/root/.npm
-    working_dir: /home/node
-    depends_on:
-      - backend
     env_file:
-      - .env.local
-    environment:
-      - HOST=0.0.0.0
-      - CHOKIDAR_USEPOLLING=true
-      - CHOKIDAR_INTERVAL=100
-      - WATCHPACK_POLLING=true
-    tty: true
-    stdin_open: true
-    command: sh -c "npm ci --include=optional && exec npm run dev -- -H 0.0.0.0"
+      - ${ENV_FILE:-.env.local}
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
 volumes:
-  mongodb_data_container:
-  node_modules_cache:
-  npm_cache:
+  mongodb_data:
+    driver: local
