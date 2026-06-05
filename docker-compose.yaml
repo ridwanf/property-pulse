@@ -25,6 +25,8 @@ services:
       dockerfile: Dockerfile
       args:
         MONGO_URI: ${MONGO_URI}
+        MONGO_ROOT_USER: ${MONGO_ROOT_USER}
+        MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
         NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
         NEXTAUTH_URL: ${NEXTAUTH_URL}
         NEXTAUTH_URL_INTERNAL: ${NEXTAUTH_URL_INTERNAL}
