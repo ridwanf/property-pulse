@@ -2,12 +2,18 @@ import { PropertyClass } from "@/models/Property"
 
 
 const getApiUrl = () => {
-  if (typeof window === 'undefined') {
-    // server-side - inside docker network
-    return process.env.NEXTAUTH_URL_INTERNAL || 'http://localhost:3000'
+  const isServer = typeof window === 'undefined'
+
+  if (isServer) {
+    const url = process.env.NEXTAUTH_URL_INTERNAL || 'http://localhost:3000'
+    console.log('🔵 SERVER-SIDE | NEXTAUTH_URL_INTERNAL:', process.env.NEXTAUTH_URL_INTERNAL)
+    console.log('🔵 SERVER-SIDE | URL used:', url)
+    return url
   }
-  // client-side - browser
-  return process.env.NEXT_PUBLIC_API_DOMAIN
+
+  const url = process.env.NEXT_PUBLIC_API_DOMAIN
+  console.log('🟢 CLIENT-SIDE | URL used:', url)
+  return url
 }
 
 
