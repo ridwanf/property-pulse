@@ -23,7 +23,7 @@ async function fetchProperties(props: FetchPropertiesResponse): Promise<Property
       return []
     }
 
-    const response = await fetch(`${API_URL}/properties?pageSize=${props.pagesSize}`, {
+    const response = await fetch(`${API_URL}/api/properties?pageSize=${props.pagesSize}`, {
       cache: 'no-store',
     })
     console.log('Response from API:', response)
@@ -49,7 +49,7 @@ async function fetchPropertyById(id: string): Promise<PropertyClass | null> {
       return null
     }
 
-    const response = await fetch(`${API_URL}/properties/${id}`, {
+    const response = await fetch(`${API_URL}/api/properties/${id}`, {
       cache: 'no-store',
     })
     if (!response.ok) {
