@@ -1,6 +1,15 @@
 import { PropertyClass } from "@/models/Property"
 
-const API_URL = process.env.NEXT_PUBLIC_API_DOMAIN
+
+const getApiUrl = () => {
+  if (typeof window === 'undefined') {
+    // server-side - inside docker network
+    return process.env.NEXTAUTH_URL_INTERNAL || 'http://localhost:3000'
+  }
+  // client-side - browser
+  return process.env.NEXT_PUBLIC_API_DOMAIN
+}
+
 
 interface FetchPropertiesResponse {
   pagesSize: number
@@ -8,6 +17,8 @@ interface FetchPropertiesResponse {
 
 async function fetchProperties(props: FetchPropertiesResponse): Promise<PropertyClass[]> {
   try {
+    const API_URL = getApiUrl()
+
     if (!API_URL) {
       return []
     }
@@ -31,6 +42,8 @@ async function fetchPropertyById(id: string): Promise<PropertyClass | null> {
 
   console.log('Fetching property with ID:', id)
   try {
+    const API_URL = getApiUrl()
+
     if (!API_URL) {
       console.error('API_URL is not defined')
       return null
