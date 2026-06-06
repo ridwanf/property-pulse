@@ -11,10 +11,16 @@ services:
       - ./.docker/seed/properties.js:/docker-entrypoint-initdb.d/properties.js
       - mongodb_data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: |
+        mongosh --quiet \
+          -u "$$MONGO_INITDB_ROOT_USERNAME" \
+          -p "$$MONGO_INITDB_ROOT_PASSWORD" \
+          --authenticationDatabase admin \
+          --eval "db.adminCommand('ping')" || exit 1
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     networks:
       - app-network
 
