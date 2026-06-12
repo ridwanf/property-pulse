@@ -1,15 +1,42 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { fetchPropertyById } from '@/utils/requests';
 
 const PropertyEditForm = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>()
+
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
-  const [fields, setFields] = useState({
+  interface PropertyFields {
+    type: string;
+    name: string;
+    description: string;
+    location: {
+      street: string;
+      city: string;
+      state: string;
+      zipcode: string;
+    };
+    beds: string;
+    baths: string;
+    square_feet: string;
+    amenities: string[];
+    rates: {
+      weekly: string;
+      monthly: string;
+      nightly: string;
+    };
+    seller_info: {
+      name: string;
+      email: string;
+      phone: string;
+    };
+  }
+
+  const [fields, setFields] = useState<PropertyFields>({
     type: '',
     name: '',
     description: '',
@@ -37,10 +64,11 @@ const PropertyEditForm = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
 
     // Fetch property data for form
-    const fetchPropertyData = async () => {
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       try {
         const propertyData = await fetchPropertyById(id);
 
@@ -48,14 +76,41 @@ const PropertyEditForm = () => {
         if (propertyData && propertyData.rates) {
           const defaultRates = { ...propertyData.rates };
           for (const rate in defaultRates) {
-            if (defaultRates[rate] === null) {
-              defaultRates[rate] = '';
+            if (defaultRates[rate as keyof typeof defaultRates] === null) {
+              defaultRates[rate as keyof typeof defaultRates] = 0;
             }
           }
           propertyData.rates = defaultRates;
         }
 
-        setFields(propertyData);
+        if (propertyData) {
+          setFields({
+            ...propertyData,
+            description: propertyData.description || '',
+            location: {
+              street: propertyData.location?.street || '',
+              city: propertyData.location?.city || '',
+              state: propertyData.location?.state || '',
+              zipcode: propertyData.location?.zipcode || '',
+            },
+            beds: propertyData.beds?.toString() || '',
+            baths: propertyData.baths?.toString() || '',
+            square_feet: propertyData.square_feet?.toString() || '',
+            amenities: propertyData.amenities || [],
+            rates: {
+              weekly: propertyData.rates?.weekly?.toString() || '',
+              monthly: propertyData.rates?.monthly?.toString() || '',
+              nightly: propertyData.rates?.nightly?.toString() || '',
+            },
+            seller_info: {
+              name: propertyData.seller_info?.name || '',
+              email: propertyData.seller_info?.email || '',
+              phone: propertyData.seller_info?.phone || '',
+            },
+          });
+        } else {
+          console.error('Property data is null');
+        }
       } catch (error) {
         console.error(error);
       } finally {
@@ -63,10 +118,10 @@ const PropertyEditForm = () => {
       }
     };
 
-    fetchPropertyData();
+    fetchPropertyById(id);
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     // Check if nested property
@@ -76,7 +131,7 @@ const PropertyEditForm = () => {
       setFields((prevFields) => ({
         ...prevFields,
         [outerKey]: {
-          ...prevFields[outerKey],
+          ...(prevFields[outerKey as keyof PropertyFields] as unknown as Record<string, unknown>), // Type assertion to handle nested object
           [innerKey]: value,
         },
       }));
@@ -88,7 +143,7 @@ const PropertyEditForm = () => {
       }));
     }
   };
-  const handleAmenitiesChange = (e) => {
+  const handleAmenitiesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
 
     // Clone the current array
@@ -113,7 +168,7 @@ const PropertyEditForm = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
     try {
@@ -192,7 +247,7 @@ const PropertyEditForm = () => {
             id='description'
             name='description'
             className='border rounded w-full py-2 px-3'
-            rows='4'
+            rows={4}
             placeholder='Add an optional description of your property'
             value={fields.description}
             onChange={handleChange}
