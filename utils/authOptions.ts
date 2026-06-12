@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
       try {
         await connectDB();
         const userExists = await User.findOne({ email: profile?.email });
+        console.log("User exists:", userExists)
         if (!userExists) {
           const userName = profile?.name?.slice(0, 20)
 
@@ -49,13 +50,13 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async session({ session }: { session: Session }) {
-
+      console.log("Session callback called with session:", session);
       try {
         if (!session.user?.email) return session;
         await connectDB();
         const user = await User.findOne({ email: session.user.email });
-
-        if (user) {
+        console.log("User found in session callback:", user)
+        if (session.user && user) {
           session.user.id = user._id.toString();
         }
         return session;

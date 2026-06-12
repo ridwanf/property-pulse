@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'  // ✅ add this at top
 
 import PropertyCard from '@/components/PropertyCard'
 import PropertySearchForm from '@/components/PropertySearchForm'

@@ -3,6 +3,7 @@ import AuthProvider from "@/components/AuthProvider";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Script from "next/script";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Property Pulse",
@@ -24,7 +25,7 @@ export default function MainLayout({
           <Footer />
 
           <Script src="/libs/dfp-sdk.min.js" strategy="lazyOnload" />
-
+          <ToastContainer />
           {/* <Script id="dfp-init" strategy="lazyOnload">
             {`
               (function checkDFP() {
