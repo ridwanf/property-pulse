@@ -1,5 +1,6 @@
 import connectDB from "@/config/database";
 import Property, { PropertyClass } from "@/models/Property";
+import { getSessionUser } from "@/utils/getSessionUser";
 import { NextRequest } from "next/server";
 
 // GET /api/properties/user/:userId
@@ -40,6 +41,16 @@ export const POST = async (request: Request): Promise<Response> => {
   try {
     const body = await request.json();
     await connectDB();
+
+    const sessionUser = await getSessionUser();
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response("Unauthorized", {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
     const newProperty = await Property.create(body);
     return new Response(JSON.stringify(newProperty), {
       status: 201,

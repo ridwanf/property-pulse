@@ -21,6 +21,7 @@ export const config = {
     "/profile",
     "/profile/saved",
     "/messages",
+    "/api"
 
   ],
 };

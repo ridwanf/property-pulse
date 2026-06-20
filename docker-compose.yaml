@@ -3,6 +3,8 @@ services:
     container_name: property-pulse-db
     image: mongo:latest
     restart: unless-stopped
+    # ports:
+    #   - "27017:27017"
     environment:
       MONGO_INITDB_DATABASE: property-pulse
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}

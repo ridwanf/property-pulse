@@ -20,14 +20,14 @@ const PropertyEditForm = () => {
       state: string;
       zipcode: string;
     };
-    beds: string;
-    baths: string;
-    square_feet: string;
+    beds: string | number;
+    baths: string | number;
+    square_feet: string | number;
     amenities: string[];
     rates: {
-      weekly: string;
-      monthly: string;
-      nightly: string;
+      weekly: string | number;
+      monthly: string | number;
+      nightly: string | number;
     };
     seller_info: {
       name: string;
@@ -66,18 +66,16 @@ const PropertyEditForm = () => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-
-    // Fetch property data for form
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const fetchPropertyData = async () => {
       try {
         const propertyData = await fetchPropertyById(id);
-
+        console.log('Fetched property data:', propertyData);
         // Check rates for null, if so then make empty string
         if (propertyData && propertyData.rates) {
           const defaultRates = { ...propertyData.rates };
-          for (const rate in defaultRates) {
-            if (defaultRates[rate as keyof typeof defaultRates] === null) {
-              defaultRates[rate as keyof typeof defaultRates] = 0;
+          for (const rate of Object.keys(defaultRates) as Array<keyof typeof defaultRates>) {
+            if (defaultRates[rate] === null) {
+              defaultRates[rate] = defaultRates[rate] === null ? 0 : defaultRates[rate];
             }
           }
           propertyData.rates = defaultRates;
@@ -87,20 +85,17 @@ const PropertyEditForm = () => {
           setFields({
             ...propertyData,
             description: propertyData.description || '',
+            amenities: propertyData.amenities || [],
             location: {
               street: propertyData.location?.street || '',
               city: propertyData.location?.city || '',
               state: propertyData.location?.state || '',
               zipcode: propertyData.location?.zipcode || '',
             },
-            beds: propertyData.beds?.toString() || '',
-            baths: propertyData.baths?.toString() || '',
-            square_feet: propertyData.square_feet?.toString() || '',
-            amenities: propertyData.amenities || [],
             rates: {
-              weekly: propertyData.rates?.weekly?.toString() || '',
-              monthly: propertyData.rates?.monthly?.toString() || '',
-              nightly: propertyData.rates?.nightly?.toString() || '',
+              weekly: propertyData.rates?.weekly ?? '',
+              monthly: propertyData.rates?.monthly ?? '',
+              nightly: propertyData.rates?.nightly ?? '',
             },
             seller_info: {
               name: propertyData.seller_info?.name || '',
@@ -118,7 +113,7 @@ const PropertyEditForm = () => {
       }
     };
 
-    fetchPropertyById(id);
+    fetchPropertyData();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
